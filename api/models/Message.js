@@ -7,8 +7,18 @@
 
 module.exports = {
 
-  attributes: {
+  async saveMessage(messageTxt, entity, userID) {
+    return await Message.create({
+      messageTxt,
+      entity,
+      userID
+    });
+  },
 
+  async getUserLastMsg(userID) {
+    return (await Message.find({ userID })
+      .sort('createdAt DESC')
+      .limit(1));
   }
-};
+}
 
