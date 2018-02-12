@@ -16,4 +16,10 @@ export class ChatService {
       .map(response => response.json());
   }
 
+  sendMessage(messageTxt) {
+    if (messageTxt === "") return;
+
+    return this.http.post(`api/message`, { userName: this.currentUserService.getUser().name, messageTxt }).map(response => response.json());
+  }
+
 }

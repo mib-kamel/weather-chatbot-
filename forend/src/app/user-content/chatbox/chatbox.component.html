@@ -2,7 +2,7 @@
   <h2 class="panel-header">Chat with the bot</h2>
 
   <div class="panel-content current-auction-panel">
-    <div class="chat-area">
+    <div class="chat-area" #chatArea>
       <div class="more-messages">
         <a (click)="moreDayClick()">More messages
           <span *ngIf="!isLoading">&uarr;</span>
@@ -14,27 +14,16 @@
           <hr>
           <span class="date-span">{{dayMessages.date}}</span>
         </div>
-        <div class="my-text">
-          Hello, what is the weather today ?
+        <div [class.myText]="message.isFromUser" [class.botText]="!message.isFromUser" *ngFor="let message of dayMessages.messages">
+          {{message.messageTxt}}
         </div>
 
-        <div class="bot-text">
-          Hi, it is 25 C
-        </div>
-
-        <div class="bot-text">
-          Hi, it is 25 C
-        </div>
-
-        <div class="bot-text">
-          Hi, it is 25 C
-        </div>
       </div>
     </div>
     <hr>
     <div class="input-area">
-      <input type="text">
-      <button>Send</button>
+      <input type="text" [(ngModel)]="messageModel">
+      <button (click)="sendMessage()">Send</button>
     </div>
   </div>
 

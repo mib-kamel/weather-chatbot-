@@ -31,12 +31,25 @@ module.exports.routes = {
   * `assets` directory)                                                      *
   *                                                                          *
   ***************************************************************************/
-
+  'GET /': {
+    fn: function (req, res) {
+      return res.sendfile('./assets/index.html')
+    },
+    skipAssets: true
+  },
   'POST /api/message': "ChatController.newMessage",
   'POST /api/user/create': "UserController.newUser",
   'GET /api/enter/:name': "UserController.enter",
   'GET /api/message/:name': "ChatController.getDayMessages",
-  'GET /api/message/:name/:dif': "ChatController.getDayMessages"
+  'GET /api/message/:name/:dif': "ChatController.getDayMessages",
+  /**
+   * To send all the other requests to the home page
+   */
+  '/*': {
+    target: '/',
+    skipRegex: /^\/api\/.*$/,
+    skipAssets: true
+  }
 
   /***************************************************************************
   *                                                                          *

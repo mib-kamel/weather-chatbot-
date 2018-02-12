@@ -18,7 +18,7 @@ module.exports = {
   },
 
   async getUserLastMsg(userID) {
-    return (await Message.find({ userID })
+    return (await Message.find({ userID, isFromUser: false })
       .sort('createdAt DESC')
       .limit(1));
   }

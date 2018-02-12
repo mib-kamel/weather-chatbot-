@@ -8,7 +8,7 @@ const Wit = require('node-wit').Wit
 const token = "4QB2QB6Z4UNH2UON5RCI7MTTRMVT3BIA"
 const requestCountry = require('request-country');
 
-const noCityMessage = `I couldn't fetch your city please enter your city.`;
+const noCityMessage = `I couldn't fetch your city, please enter your city.`;
 
 const noGetWeatherMessage = `I am a bot who can get the weather in any city for a specific date, are you asking for the weather in your city?`;
 
@@ -30,28 +30,26 @@ module.exports = {
             res.send("Invalid user");
             return;
         }
-
-
         user = user[0];
 
         await Message.saveMessage(messageTxt, "-", messageDate, user.id, true);
 
-        let respMessage = '';
+        let respMessage = '', last_city, last_weather_get, waiting_confirmation;
 
         let userLastMsg = await Message.getUserLastMsg(user.id);
         if (userLastMsg && Array.isArray(userLastMsg) && userLastMsg.length > 0) {
             userLastMsg = userLastMsg[0];
+            userLastMsg.entity.city;
+            userLastMsg.entity.weather_get;
+            userLastMsg.entity.waiting_confirmation;
         }
-        let last_city = userLastMsg.entity.city;
-        let last_weather_get = userLastMsg.entity.weather_get;
-        let waiting_confirmation = userLastMsg.entity.waiting_confirmation;
 
         const client = new Wit({ accessToken: token });
 
         client.message(messageTxt, {})
             .then(async (data) => {
                 let { datetime, city, weather_get, greetings, yes } = _actions.getEntities(data.entities);
-
+                console.log(datetime, city, weather_get, greetings, yes)
                 if (greetings) respMessage += "Hi, ";
 
                 weather_get = _actions.getWeather(weather_get);
@@ -64,7 +62,7 @@ module.exports = {
                     } else {
                         respMessage += noGetWeatherMessage;
                         await Message.saveMessage(respMessage, { weather_get: false, city, datetime, waiting_confirmation: true }, messageDate, user.id, false);
-                        res.send(respMessage);
+                        res.send({ respMessage });
                         return;
                     }
 
@@ -77,7 +75,7 @@ module.exports = {
                     else {
                         respMessage += noCityMessage;
                         await Message.saveMessage(respMessage, { weather_get, city: false, datetime, waiting_confirmation: false }, messageDate, user.id, false);
-                        res.send(respMessage);
+                        res.send({ respMessage });
                         return;
                     }
                 }
@@ -86,13 +84,13 @@ module.exports = {
                     if (temp === 404) {
                         respMessage += wrongCityMessage;
                         await Message.saveMessage(respMessage, { weather_get, city: false, datetime, waiting_confirmation: false }, messageDate, user.id, false);
-                        res.send(respMessage);
+                        res.send({ respMessage });
                         return;
                     }
 
                     respMessage += _actions.getWeatherMessage(city, datetime, Number(temp.main.temp) - 273.15);
                     await Message.saveMessage(respMessage, { weather_get: false, city: false, datetime, waiting_confirmation: false }, messageDate, user.id, false);
-                    res.send(respMessage);
+                    res.send({ respMessage });
                 });
             })
             .catch(err => {
@@ -130,7 +128,14 @@ module.exports = {
 
         date = _actions.getFormmatedDate(date);
 
-        res.send((await Message.find({ userID, messageDate: date })));
+        const todayDate = _actions.getFormmatedDate(new Date());
+
+        const messages = await Message.find({ userID, messageDate: date });
+
+        res.send({
+            messages: messages,
+            todayDate
+        });
     }
 
 };
