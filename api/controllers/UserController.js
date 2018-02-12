@@ -26,6 +26,15 @@ module.exports = {
 
         res.send(user);
 
+    },
+    async enter(req, res) {
+        res.send(await User.findOrCreate(
+            {
+                name: req.params.name
+            },
+            {
+                name: req.params.name
+            }));
     }
 };
 

@@ -8,9 +8,9 @@ const Wit = require('node-wit').Wit
 const token = "4QB2QB6Z4UNH2UON5RCI7MTTRMVT3BIA"
 const requestCountry = require('request-country');
 
-const noCityMessage = `I couldn't fetch your city please enter the city you want its weather.`;
+const noCityMessage = `I couldn't fetch your city please enter your city.`;
 
-const noGetWeatherMessage = `I am a bot who can get the weather in any city for a specific date, are you asking for the weather ?`;
+const noGetWeatherMessage = `I am a bot who can get the weather in any city for a specific date, are you asking for the weather in your city?`;
 
 const wrongCityMessage = `We couldn't fetch the weather for the city you specified, please enter a correct city :)`;
 
@@ -24,13 +24,17 @@ module.exports = {
 
         let messageTxt = req.body.messageTxt;
         let user = (await User.find({ name: req.body.userName }));
+        let messageDate = _actions.getFormmatedDate(new Date());
 
         if (user.length === 0) {
             res.send("Invalid user");
             return;
         }
 
+
         user = user[0];
+
+        await Message.saveMessage(messageTxt, "-", messageDate, user.id, true);
 
         let respMessage = '';
 
@@ -43,10 +47,10 @@ module.exports = {
         let waiting_confirmation = userLastMsg.entity.waiting_confirmation;
 
         const client = new Wit({ accessToken: token });
+
         client.message(messageTxt, {})
             .then(async (data) => {
-
-                let { datetime, city, weather_get, greetings, confirmation } = _actions.getEntities(data.entities);
+                let { datetime, city, weather_get, greetings, yes } = _actions.getEntities(data.entities);
 
                 if (greetings) respMessage += "Hi, ";
 
@@ -55,11 +59,11 @@ module.exports = {
                 datetime = _actions.getDate(datetime);
 
                 if (weather_get === false) {
-                    if (last_weather_get || (waiting_confirmation && confirmation && confirmation.length > 0)) {
+                    if (last_weather_get || (waiting_confirmation && yes && yes.length > 0)) {
                         weather_get = true;
                     } else {
                         respMessage += noGetWeatherMessage;
-                        await Message.saveMessage(respMessage, { weather_get: false, city, datetime, waiting_confirmation: true }, user.id);
+                        await Message.saveMessage(respMessage, { weather_get: false, city, datetime, waiting_confirmation: true }, messageDate, user.id, false);
                         res.send(respMessage);
                         return;
                     }
@@ -72,7 +76,7 @@ module.exports = {
                     }
                     else {
                         respMessage += noCityMessage;
-                        await Message.saveMessage(respMessage, { weather_get, city: false, datetime, waiting_confirmation: false }, user.id);
+                        await Message.saveMessage(respMessage, { weather_get, city: false, datetime, waiting_confirmation: false }, messageDate, user.id, false);
                         res.send(respMessage);
                         return;
                     }
@@ -81,13 +85,13 @@ module.exports = {
                 WeatherService.getCurrentWeather(city).then(async temp => {
                     if (temp === 404) {
                         respMessage += wrongCityMessage;
-                        await Message.saveMessage(respMessage, { weather_get, city: false, datetime, waiting_confirmation: false }, user.id);
+                        await Message.saveMessage(respMessage, { weather_get, city: false, datetime, waiting_confirmation: false }, messageDate, user.id, false);
                         res.send(respMessage);
                         return;
                     }
 
                     respMessage += _actions.getWeatherMessage(city, datetime, Number(temp.main.temp) - 273.15);
-                    await Message.saveMessage(respMessage, { weather_get: false, city: false, datetime, waiting_confirmation: false }, user.id);
+                    await Message.saveMessage(respMessage, { weather_get: false, city: false, datetime, waiting_confirmation: false }, messageDate, user.id, false);
                     res.send(respMessage);
                 });
             })
@@ -96,6 +100,37 @@ module.exports = {
                 console.log(err);
                 res.send("Couldn't connect to wit.ai, please trye again");
             });
+    },
+
+    async getDayMessages(req, res) {
+        let dif = 0;
+        let name;
+        if (req.params.dif !== undefined) {
+            dif = req.params.dif;
+        }
+
+        if (req.params.name) {
+            name = req.params.name;
+        } else {
+            res.send("No user specified");
+            return;
+        }
+
+        const user = await User.find({ name });
+
+        if (!Array.isArray(user) || user.length === 0) {
+            res.send("Wrong user");
+            return;
+        }
+
+        const userID = user[0].id;
+
+        let date = new Date();
+        date = new Date(date.getTime() - dif * 24 * 60 * 60 * 1000);
+
+        date = _actions.getFormmatedDate(date);
+
+        res.send((await Message.find({ userID, messageDate: date })));
     }
 
 };

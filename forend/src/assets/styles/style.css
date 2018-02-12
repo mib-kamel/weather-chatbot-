@@ -1,0 +1,209 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
+body {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
+
+.header {
+    padding: 20px 40px;
+    height: 70px;
+    color: white;
+    background: #4267B2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header h1 {
+    font-size: 1.5em;
+    font-weight: 300;
+}
+
+.col-container {
+    box-sizing: border-box;
+    margin-right: 20px;
+    width: 33%;
+}
+
+.col-container:last-child {
+    margin-right: 0;
+}
+
+.panel {
+    width: 100%;
+    background: white;
+    box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.25);
+    margin-bottom: 20px;
+}
+
+.panel-header {
+    padding: 20px;
+    color: white;
+    background: #4267B2;
+    font-weight: 300;
+    text-align: left;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.panel-content {
+    color: #777;
+    padding: 20px;
+    line-height: 1.5;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login-div-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    align-content: center;
+    justify-content: center;
+}
+
+.login {
+    width: 100%;
+    max-width: 400px;
+    margin: 16px auto;
+    font-size: 16px;
+    box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.25);
+}
+
+.login-header {
+    background: #4267B2;
+    padding: 20px;
+    font-weight: 300;
+    text-align: center;
+    font-size: 1.4em;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.login-container {
+    background: #ebebeb;
+    padding: 12px;
+}
+
+.login form * {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    border-width: 1px;
+    border-style: solid;
+    padding: 16px;
+    outline: 0;
+    font-family: inherit;
+    font-size: 0.95em;
+}
+
+input {
+    background: #fff;
+    border-color: #bbb;
+    color: #555;
+    margin-bottom: 20px;
+    font-weight: 300;
+    border-width: 1px;
+    border-style: solid;
+    padding: 16px;
+    outline: 0;
+    font-family: inherit;
+    font-size: 0.95em;
+}
+
+input:focus {
+    border-color: #888;
+}
+
+button {
+    background: #5ea1da;
+    border-color: transparent;
+    color: #fff;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #388cd5;
+}
+
+.input-area {
+    display: flex;
+}
+
+.input-area input {
+    flex-grow: 1;
+    margin-bottom: 0 !important;
+    margin-right: 20px;
+}
+
+.input-area button {
+    width: 100px !important;
+}
+
+.chat-area {
+    overflow-y: scroll;
+    height: 250px;
+}
+
+.chat-texts {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-area .my-text,
+.chat-area .bot-text {
+    max-width: 70%;
+    padding: 13px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    border-radius: 7px;
+    margin-bottom: 20px;
+}
+
+.chat-area .my-text:last-child,
+.chat-area .bot-text:last-child {
+    margin-bottom: 0;
+}
+
+.chat-area .my-text {
+    background-color: #00B0FF;
+    color: white;
+    align-self: flex-start;
+}
+
+.chat-area .bot-text {
+    background-color: #ECEFF1;
+    color: black;
+    align-self: flex-end;
+    margin-right: 20px;
+}
+
+hr {
+    margin: 20px 0;
+    color: rgba(136, 136, 136, 0.219);
+}
+
+.date-area hr {
+    border: none;
+    border-top: 1px solid rgba(136, 136, 136, 0.219);
+    margin: 0;
+    margin-top: 10px;
+}
+
+.date-area .date-span {
+    display: inline-block;
+    position: relative;
+    top: -14px;
+    padding: 0 3px;
+    background: white;
+    font-size: 12px;
+}
+
+.more-messages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}

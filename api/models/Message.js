@@ -7,11 +7,13 @@
 
 module.exports = {
 
-  async saveMessage(messageTxt, entity, userID) {
+  async saveMessage(messageTxt, entity, messageDate, userID, isFromUser = false) {
     return await Message.create({
       messageTxt,
       entity,
-      userID
+      userID,
+      messageDate,
+      isFromUser
     });
   },
 
