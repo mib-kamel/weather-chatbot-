@@ -63,6 +63,8 @@ export class ChatboxComponent implements OnInit {
 
   sendMessage() {
 
+    if (this.messageModel === "") return;
+    
     this.daysMessages[this.daysMessages.length - 1].messages.push({
       messageTxt: this.messageModel,
       isFromUser: true

@@ -6,11 +6,9 @@ import { HttpModule } from '@angular/http';
 
 import { UserContentComponent } from './user-content.component';
 import { StatsComponent } from './stats/stats.component';
-import { NotificationsComponent } from './notifications/notifications.component';
-import { InventoryComponent } from './inventory/inventory.component';
-import { AuctionComponent } from './auction/auction.component';
+import { ChatboxComponent } from './chatbox/chatbox.component';
 import { CurrentUserService } from '../current-user.service';
-import { AuctionService } from './auction.service';
+import { ChatService } from './chat.service';
 
 describe('UserContentComponent', () => {
   let component: UserContentComponent;
@@ -18,10 +16,9 @@ describe('UserContentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserContentComponent, StatsComponent, NotificationsComponent,
-      InventoryComponent, AuctionComponent ],
+      declarations: [ UserContentComponent, StatsComponent, ChatboxComponent ],
       imports: [FormsModule, RouterTestingModule, HttpModule],
-      providers: [CurrentUserService, AuctionService]
+      providers: [CurrentUserService, ChatService]
     })
     .compileComponents();
   }));

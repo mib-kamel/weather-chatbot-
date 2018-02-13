@@ -39,9 +39,9 @@ module.exports = {
         let userLastMsg = await Message.getUserLastMsg(user.id);
         if (userLastMsg && Array.isArray(userLastMsg) && userLastMsg.length > 0) {
             userLastMsg = userLastMsg[0];
-            userLastMsg.entity.city;
-            userLastMsg.entity.weather_get;
-            userLastMsg.entity.waiting_confirmation;
+            last_city = userLastMsg.entity.city;
+            last_weather_get = userLastMsg.entity.weather_get;
+            waiting_confirmation = userLastMsg.entity.waiting_confirmation;
         }
 
         const client = new Wit({ accessToken: token });
@@ -49,7 +49,7 @@ module.exports = {
         client.message(messageTxt, {})
             .then(async (data) => {
                 let { datetime, city, weather_get, greetings, yes } = _actions.getEntities(data.entities);
-                console.log(datetime, city, weather_get, greetings, yes)
+
                 if (greetings) respMessage += "Hi, ";
 
                 weather_get = _actions.getWeather(weather_get);
