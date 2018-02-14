@@ -39,7 +39,7 @@ module.exports.routes = {
   },
   'POST /api/message': "ChatController.newMessage",
   'POST /api/user/create': "UserController.newUser",
-  'get /api/users/all': 'UserController.getAllUsers',
+  'Get /api/users/all': 'UserController.getAllUsers',
   'GET /api/enter/:name': "UserController.enter",
   'GET /api/message/:name': "ChatController.getDayMessages",
   'GET /api/message/:name/:dif': "ChatController.getDayMessages",
