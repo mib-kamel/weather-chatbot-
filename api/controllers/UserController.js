@@ -35,6 +35,9 @@ module.exports = {
             {
                 name: req.params.name
             }));
+    },
+    async getAllUsers(req, res) {
+        res.send(await User.find({}));
     }
 };
 
